@@ -1,8 +1,9 @@
 package neo
 
 import (
-	"google.golang.org/grpc"
 	"time"
+
+	"google.golang.org/grpc"
 )
 
 type Option interface {
