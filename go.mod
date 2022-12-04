@@ -1,4 +1,4 @@
-module neo
+module github.com/bejens/neo
 
 go 1.19
 
