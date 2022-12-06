@@ -49,3 +49,15 @@ var defaultOptions = option{
 var defaultGrpcOptions = []grpc.ServerOption{
 	grpc.ConnectionTimeout(30 * time.Second),
 }
+
+func Network(network string) Option {
+	return &funcOption{func(o *option) {
+		o.network = network
+	}}
+}
+
+func Address(address string) Option {
+	return &funcOption{func(o *option) {
+		o.address = address
+	}}
+}
