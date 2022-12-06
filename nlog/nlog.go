@@ -8,5 +8,5 @@ import (
 var defaultLogger logger.Logger = zap.Default()
 
 func Info(msg string) {
-	defaultLogger.Log(msg)
+	defaultLogger.Log(logger.InfoLevel, msg)
 }
