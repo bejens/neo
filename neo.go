@@ -27,11 +27,11 @@ func (neo *Neo) GrpcServer() *grpc.Server {
 	return neo.server
 }
 
-func New(options ...Option) (*Neo, error) {
+func New(options ...Option) *Neo {
 	opts := defaultOptions
 	for _, opt := range options {
 		opt.apply(&opts)
 	}
 
-	return &Neo{opt: opts}, nil
+	return &Neo{opt: opts}
 }
