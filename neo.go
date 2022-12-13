@@ -2,6 +2,7 @@ package neo
 
 import (
 	"github.com/bejens/neo/logx"
+	"go.uber.org/zap"
 	"net"
 	"os"
 	"os/signal"
@@ -28,14 +29,15 @@ func (neo *Neo) Run() error {
 		}
 	}()
 
-	server := grpc.NewServer(neo.opt.grpcServerOpts...)
+	neo.server = grpc.NewServer(neo.opt.grpcServerOpts...)
 	lis, err := net.Listen(neo.opt.network, neo.opt.address)
 	if err != nil {
 		return err
 	}
 
-	logx.Info("Server Starting...")
-	return server.Serve(lis)
+	logx.Info("Server Starting...",
+		zap.String("address", neo.opt.address))
+	return neo.server.Serve(lis)
 }
 
 func (neo *Neo) Stop() {
