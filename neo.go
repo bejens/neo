@@ -24,7 +24,6 @@ func (neo *Neo) Run() error {
 	go func() {
 		select {
 		case <-sign:
-			logx.Info("Server Graceful Stop")
 			neo.Stop()
 		}
 	}()
@@ -41,6 +40,7 @@ func (neo *Neo) Run() error {
 }
 
 func (neo *Neo) Stop() {
+	logx.Info("Server Graceful Stop")
 	neo.server.GracefulStop()
 }
 
