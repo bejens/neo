@@ -1,12 +1,13 @@
 package neo
 
 import (
-	"github.com/bejens/neo/logx"
-	"go.uber.org/zap"
 	"net"
 	"os"
 	"os/signal"
 
+	"github.com/bejens/neo/logx"
+
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )
 
