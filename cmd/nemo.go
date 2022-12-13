@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-// Nemo flag
+// Nemo flagx
 // `neo build`
 // `neo install`
 // `neo update`

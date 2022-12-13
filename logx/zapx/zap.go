@@ -1,7 +1,7 @@
 package zapx
 
 import (
-	"errors"
+	"fmt"
 
 	"github.com/bejens/neo/logx/logger"
 
@@ -23,10 +23,7 @@ type ZLogger struct {
 
 func (zl *ZLogger) Log(level logger.Level, msg string, args ...any) {
 
-	fields, err := zl.assert(args...)
-	if err != nil {
-		zl.logger.Error(err.Error())
-	}
+	fields := zl.assert(args...)
 
 	switch level {
 	case logger.InfoLevel:
@@ -44,13 +41,12 @@ func (zl *ZLogger) Log(level logger.Level, msg string, args ...any) {
 	}
 }
 
-func (zl *ZLogger) assert(args ...any) (fields []zap.Field, err error) {
-	for _, arg := range args {
+func (zl *ZLogger) assert(args ...any) (fields []zap.Field) {
+	for index, arg := range args {
 		if field, ok := arg.(zap.Field); ok {
 			fields = append(fields, field)
 		} else {
-			err = errors.New("only zap.Field can be use as args")
-			return
+			fields = append(fields, zap.Any(fmt.Sprintf("arg%d", index), arg))
 		}
 	}
 	return

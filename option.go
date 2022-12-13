@@ -50,6 +50,7 @@ var defaultGrpcOptions = []grpc.ServerOption{
 	grpc.ConnectionTimeout(30 * time.Second),
 }
 
+// Network is one of 'tcp' 'udp'
 func Network(network string) Option {
 	return &funcOption{func(o *option) {
 		o.network = network
