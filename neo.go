@@ -1,7 +1,10 @@
 package neo
 
 import (
+	"github.com/bejens/neo/logx"
 	"net"
+	"os"
+	"os/signal"
 
 	"google.golang.org/grpc"
 )
@@ -14,13 +17,29 @@ type Neo struct {
 
 func (neo *Neo) Run() error {
 
+	//Graceful Stop
+	sign := make(chan os.Signal, 1)
+	signal.Notify(sign, os.Interrupt, os.Kill)
+	go func() {
+		select {
+		case <-sign:
+			logx.Info("Server Graceful Stop")
+			neo.Stop()
+		}
+	}()
+
 	server := grpc.NewServer(neo.opt.grpcServerOpts...)
 	lis, err := net.Listen(neo.opt.network, neo.opt.address)
 	if err != nil {
 		return err
 	}
 
+	logx.Info("Server Starting...")
 	return server.Serve(lis)
+}
+
+func (neo *Neo) Stop() {
+	neo.server.GracefulStop()
 }
 
 func (neo *Neo) GrpcServer() *grpc.Server {
