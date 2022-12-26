@@ -1,5 +1,7 @@
 package parser
 
+import "io"
+
 type Parser interface {
-	Parse()
+	Parse(reader io.Reader) (map[string]any, error)
 }

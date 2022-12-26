@@ -1,7 +1,15 @@
 package cfg
 
+func InitCfg() {
+
+}
+
 func Get[T any](key string) (t T, ok bool) {
-	value := defaultStore.Get(key)
+	value, ok := defaultStore.Get(key)
+	if !ok {
+		return t, false
+	}
+
 	t, ok = value.(T)
 	return
 }

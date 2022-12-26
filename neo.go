@@ -1,6 +1,7 @@
 package neo
 
 import (
+	"github.com/bejens/neo/cfg"
 	"net"
 	"os"
 	"os/signal"
@@ -40,13 +41,17 @@ func (neo *Neo) Run() error {
 	return neo.server.Serve(lis)
 }
 
-func (neo *Neo) Stop() {
-	logx.Info("Server Graceful Stop")
-	neo.server.GracefulStop()
+func (neo *Neo) Register(sd *grpc.ServiceDesc, ss interface{}) {
+	neo.server.RegisterService(sd, ss)
 }
 
 func (neo *Neo) GrpcServer() *grpc.Server {
 	return neo.server
+}
+
+func (neo *Neo) Stop() {
+	logx.Info("Server Graceful Stop")
+	neo.server.GracefulStop()
 }
 
 func New(options ...Option) *Neo {
@@ -54,6 +59,8 @@ func New(options ...Option) *Neo {
 	for _, opt := range options {
 		opt.apply(&opts)
 	}
+
+	cfg.InitCfg()
 
 	return &Neo{opt: opts}
 }
