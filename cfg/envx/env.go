@@ -2,7 +2,6 @@ package envx
 
 import (
 	"errors"
-	"io"
 	"os"
 	"strings"
 )
@@ -13,7 +12,7 @@ type EnvParser struct {
 	sep    string
 }
 
-func (ep *EnvParser) Parse(_reader io.Reader) (m map[string]any, err error) {
+func (ep *EnvParser) Parse() (m map[string]any, err error) {
 
 	envs := make(map[string]any)
 
@@ -22,12 +21,12 @@ func (ep *EnvParser) Parse(_reader io.Reader) (m map[string]any, err error) {
 		if !strings.HasPrefix(env, ep.prefix) {
 			continue
 		}
-		envSlice := strings.Split(env, ep.sep)
-		if len(envSlice) < 2 {
+		env = strings.TrimPrefix(env, ep.prefix)
+		slice := strings.SplitN(env, ep.sep, 2)
+		if len(slice) < 2 {
 			continue
 		}
-		keys := strings.Split(envSlice[0], ep.seg)
-		if err := ep.store(envs, keys, envSlice[1]); err != nil {
+		if err := ep.store(envs, strings.Split(slice[0], ep.seg), slice[1]); err != nil {
 			return m, err
 		}
 	}
@@ -41,10 +40,11 @@ func (ep *EnvParser) store(m map[string]any, keys []string, value string) error 
 		return nil
 	}
 
-	m1, ok := m[keys[0]]
+	key := keys[0]
+	m1, ok := m[key]
 	if !ok {
 		m1 = map[string]any{}
-		m[keys[0]] = m1
+		m[key] = m1
 	}
 
 	m2, ok := m1.(map[string]any)

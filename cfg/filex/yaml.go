@@ -3,13 +3,21 @@ package filex
 import (
 	"gopkg.in/yaml.v3"
 	"io"
+	"os"
 )
 
-type YamlParser struct{}
+type YamlParser struct {
+	path string
+}
 
-func (yp *YamlParser) Parse(reader io.Reader) (m map[string]any, err error) {
+func (yp *YamlParser) Parse() (m map[string]any, err error) {
 
-	bs, err := io.ReadAll(reader)
+	f, err := os.OpenFile(yp.path, os.O_RDONLY, os.ModePerm)
+	if err != nil {
+		return m, err
+	}
+
+	bs, err := io.ReadAll(f)
 	if err != nil {
 		return nil, err
 	}
