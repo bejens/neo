@@ -7,9 +7,9 @@ import (
 )
 
 type EnvParser struct {
-	prefix string
-	seg    string
-	sep    string
+	Prefix string
+	Seg    string
+	Sep    string
 }
 
 func (ep *EnvParser) Parse() (m map[string]any, err error) {
@@ -18,15 +18,15 @@ func (ep *EnvParser) Parse() (m map[string]any, err error) {
 
 	environ := os.Environ()
 	for _, env := range environ {
-		if !strings.HasPrefix(env, ep.prefix) {
+		if !strings.HasPrefix(env, ep.Prefix) {
 			continue
 		}
-		env = strings.TrimPrefix(env, ep.prefix)
-		slice := strings.SplitN(env, ep.sep, 2)
+		env = strings.TrimPrefix(env, ep.Prefix)
+		slice := strings.SplitN(env, ep.Sep, 2)
 		if len(slice) < 2 {
 			continue
 		}
-		if err := ep.store(envs, strings.Split(slice[0], ep.seg), slice[1]); err != nil {
+		if err := ep.store(envs, strings.Split(slice[0], ep.Seg), slice[1]); err != nil {
 			return m, err
 		}
 	}

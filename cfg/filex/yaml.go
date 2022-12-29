@@ -7,12 +7,12 @@ import (
 )
 
 type YamlParser struct {
-	path string
+	Path string
 }
 
 func (yp *YamlParser) Parse() (m map[string]any, err error) {
 
-	f, err := os.OpenFile(yp.path, os.O_RDONLY, os.ModePerm)
+	f, err := os.OpenFile(yp.Path, os.O_RDONLY, os.ModePerm)
 	if err != nil {
 		return m, err
 	}

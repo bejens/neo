@@ -1,6 +1,7 @@
 package cfg
 
 import (
+	"github.com/imdario/mergo"
 	"strings"
 )
 
@@ -42,7 +43,16 @@ func (store *localStore) get(m map[string]any, keys ...string) (any, bool) {
 	return store.get(m1, keys[1:]...)
 }
 
+func (store *localStore) Merge(m map[string]any) error {
+	return store.merge(&store.m, &m)
+}
+
+func (store *localStore) merge(m1, m2 *map[string]any) error {
+	return mergo.Merge(m1, m2, mergo.WithOverride)
+}
+
 type Storage interface {
 	Store(key string, value any)
-	Get(key string) any
+	Get(key string) (any, bool)
+	Merge(m map[string]any) error
 }

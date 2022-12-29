@@ -1,7 +1,41 @@
 package cfg
 
-func InitCfg() {
+import (
+	"github.com/bejens/neo/cfg/envx"
+	"github.com/bejens/neo/cfg/filex"
+	"github.com/bejens/neo/cfg/parser"
+)
 
+var config = &Config{
+	Storage: defaultStore,
+	parsers: []parser.Parser{
+		&filex.YamlParser{
+			Path: "app.yaml",
+		},
+		&envx.EnvParser{
+			Prefix: "neo",
+			Seg:    ".",
+			Sep:    "=",
+		},
+	},
+}
+
+func InitCfg() error {
+	for _, p := range config.parsers {
+		m, err := p.Parse()
+		if err != nil {
+			return err
+		}
+		if err := config.Storage.Merge(m); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+type Config struct {
+	Storage Storage
+	parsers []parser.Parser
 }
 
 func Get[T any](key string) (t T, ok bool) {
