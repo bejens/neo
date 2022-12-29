@@ -54,13 +54,15 @@ func (neo *Neo) Stop() {
 	neo.server.GracefulStop()
 }
 
-func New(options ...Option) *Neo {
+func New(options ...Option) (*Neo, error) {
 	opts := defaultOptions
 	for _, opt := range options {
 		opt.apply(&opts)
 	}
 
-	cfg.InitCfg()
+	if err := cfg.InitCfg(); err != nil {
+		return nil, err
+	}
 
-	return &Neo{opt: opts}
+	return &Neo{opt: opts}, nil
 }
