@@ -6,7 +6,7 @@ import (
 	"github.com/imdario/mergo"
 )
 
-var defaultStore *localStore
+var defaultStore = &localStore{m: map[string]any{}}
 
 type localStore struct {
 	m map[string]any
