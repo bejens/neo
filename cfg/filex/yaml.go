@@ -1,8 +1,11 @@
 package filex
 
 import (
+	"errors"
+	"github.com/bejens/neo/logx"
 	"gopkg.in/yaml.v3"
 	"io"
+	"io/fs"
 	"os"
 )
 
@@ -12,8 +15,12 @@ type YamlParser struct {
 
 func (yp *YamlParser) Parse() (m map[string]any, err error) {
 
-	f, err := os.OpenFile(yp.Path, os.O_RDONLY, os.ModePerm)
+	f, err := os.Open(yp.Path)
 	if err != nil {
+		if errors.Is(err, fs.ErrExist) {
+			logx.Warn("config file is not exist")
+			return m, nil
+		}
 		return m, err
 	}
 
