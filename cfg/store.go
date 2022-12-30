@@ -1,8 +1,9 @@
 package cfg
 
 import (
-	"github.com/imdario/mergo"
 	"strings"
+
+	"github.com/imdario/mergo"
 )
 
 var defaultStore *localStore

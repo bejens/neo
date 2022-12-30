@@ -8,9 +8,9 @@ import (
 func TestEnvParser_Parse(t *testing.T) {
 
 	parser := EnvParser{
-		prefix: "neo",
-		seg:    ".",
-		sep:    "=",
+		Prefix: "neo",
+		Seg:    ".",
+		Sep:    "=",
 	}
 
 	_ = os.Setenv("neo.schema.key1", "1")

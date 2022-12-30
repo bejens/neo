@@ -2,11 +2,13 @@ package filex
 
 import (
 	"errors"
-	"github.com/bejens/neo/logx"
-	"gopkg.in/yaml.v3"
 	"io"
 	"io/fs"
 	"os"
+
+	"github.com/bejens/neo/logx"
+
+	"gopkg.in/yaml.v3"
 )
 
 type YamlParser struct {
