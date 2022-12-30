@@ -1,6 +1,7 @@
 package cfg
 
 import (
+	"fmt"
 	"github.com/bejens/neo/cfg/envx"
 	"github.com/bejens/neo/cfg/filex"
 	"github.com/bejens/neo/cfg/parser"
@@ -21,6 +22,7 @@ var config = &Config{
 }
 
 func InitCfg() error {
+
 	for _, p := range config.parsers {
 		m, err := p.Parse()
 		if err != nil {
@@ -29,6 +31,21 @@ func InitCfg() error {
 		if err := config.Storage.Merge(m); err != nil {
 			return err
 		}
+	}
+
+	profile, ok := Get[string]("profile")
+	if !ok {
+		return nil
+	}
+
+	path := fmt.Sprintf("app_%s.yaml", profile)
+	p := filex.YamlParser{Path: path}
+	m, err := p.Parse()
+	if err != nil {
+		return err
+	}
+	if err := config.Storage.Merge(m); err != nil {
+		return err
 	}
 	return nil
 }
