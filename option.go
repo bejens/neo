@@ -65,9 +65,10 @@ func Address(address string) Option {
 	}}
 }
 
-func fromConfig() []grpc.ServerOption {
+func fromConfig() ([]grpc.ServerOption, []Option) {
 
 	var options []grpc.ServerOption
+	var opts []Option
 
 	writeBufferSize, ok := cfg.Get[int]("server.grpc.write_buffer_size")
 	if ok {
@@ -175,5 +176,15 @@ func fromConfig() []grpc.ServerOption {
 		options = append(options, grpc.NumStreamWorkers(numStreamWorkers))
 	}
 
-	return options
+	network, ok := cfg.Get[string]("server.network")
+	if ok {
+		opts = append(opts, Network(network))
+	}
+
+	address, ok := cfg.Get[string]("server.address")
+	if ok {
+		opts = append(opts, Address(address))
+	}
+
+	return options, opts
 }
