@@ -34,6 +34,8 @@ func (zl *ZLogger) Log(level logger.Level, msg string, args ...any) {
 		zl.logger.Warn(msg, fields...)
 	case logger.ErrorLevel:
 		zl.logger.Error(msg, fields...)
+	case logger.FatalLevel:
+		zl.logger.Fatal(msg, fields...)
 	case logger.PanicLevel:
 		zl.logger.Panic(msg, fields...)
 	default:

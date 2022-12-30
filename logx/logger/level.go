@@ -7,5 +7,6 @@ const (
 	WarnLevel
 	ErrorLevel
 	InfoLevel
+	FatalLevel
 	PanicLevel
 )

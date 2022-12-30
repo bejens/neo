@@ -27,6 +27,10 @@ func Info(msg string, args ...any) {
 	loggerCore.Log(logger.InfoLevel, msg, args...)
 }
 
+func Fatalln(msg string, args ...any) {
+	loggerCore.Log(logger.FatalLevel, msg, args...)
+}
+
 func Panic(msg string, args ...any) {
 	loggerCore.Log(logger.PanicLevel, msg, args...)
 }
