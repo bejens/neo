@@ -12,7 +12,7 @@ type EnvParser struct {
 	Sep    string
 }
 
-func (ep *EnvParser) Parse() (m map[string]any, err error) {
+func (ep *EnvParser) Parse() (map[string]any, error) {
 
 	envs := make(map[string]any)
 
@@ -27,7 +27,7 @@ func (ep *EnvParser) Parse() (m map[string]any, err error) {
 			continue
 		}
 		if err := ep.store(envs, strings.Split(slice[0], ep.Seg), slice[1]); err != nil {
-			return m, err
+			return envs, err
 		}
 	}
 

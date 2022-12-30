@@ -15,7 +15,9 @@ type YamlParser struct {
 	Path string
 }
 
-func (yp *YamlParser) Parse() (m map[string]any, err error) {
+func (yp *YamlParser) Parse() (map[string]any, error) {
+
+	m := make(map[string]any)
 
 	f, err := os.Open(yp.Path)
 	if err != nil {
@@ -31,6 +33,6 @@ func (yp *YamlParser) Parse() (m map[string]any, err error) {
 		return nil, err
 	}
 
-	err = yaml.Unmarshal(bs, m)
-	return
+	err = yaml.Unmarshal(bs, &m)
+	return m, err
 }
