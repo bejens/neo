@@ -19,7 +19,7 @@ func (yp *YamlParser) Parse() (m map[string]any, err error) {
 
 	f, err := os.Open(yp.Path)
 	if err != nil {
-		if errors.Is(err, fs.ErrExist) {
+		if errors.Is(err, fs.ErrNotExist) {
 			logx.Warn("config file is not exist")
 			return m, nil
 		}
