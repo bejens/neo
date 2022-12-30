@@ -55,14 +55,17 @@ func (neo *Neo) Stop() {
 }
 
 func New(options ...Option) (*Neo, error) {
-	opts := defaultOptions
-	for _, opt := range options {
-		opt.apply(&opts)
-	}
 
 	if err := cfg.InitCfg(); err != nil {
 		return nil, err
 	}
+	grpcOpts := fromConfig()
+
+	opts := defaultOptions
+	for _, opt := range options {
+		opt.apply(&opts)
+	}
+	opts.grpcServerOpts = append(opts.grpcServerOpts, grpcOpts...)
 
 	return &Neo{opt: opts}, nil
 }
