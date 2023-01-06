@@ -1,10 +1,12 @@
 package neo
 
 import (
+	"fmt"
 	"github.com/bejens/neo/cfg"
 	"net"
 	"os"
 	"os/signal"
+	"sync"
 
 	"github.com/bejens/neo/logx"
 
@@ -14,6 +16,8 @@ import (
 
 type Neo struct {
 	opt option
+
+	serviceInfos sync.Map
 
 	server *grpc.Server
 }
@@ -31,6 +35,14 @@ func (neo *Neo) Run() error {
 	}()
 
 	neo.server = grpc.NewServer(neo.opt.grpcServerOpts...)
+
+	neo.serviceInfos.Range(func(key, value any) bool {
+		sd := key.(*grpc.ServiceDesc)
+		logx.Info(fmt.Sprintf("registered service: %s", sd.ServiceName))
+		neo.server.RegisterService(sd, value)
+		return true
+	})
+
 	lis, err := net.Listen(neo.opt.network, neo.opt.address)
 	if err != nil {
 		return err
@@ -42,7 +54,7 @@ func (neo *Neo) Run() error {
 }
 
 func (neo *Neo) Register(sd *grpc.ServiceDesc, ss interface{}) {
-	neo.server.RegisterService(sd, ss)
+	neo.serviceInfos.Store(sd, ss)
 }
 
 func (neo *Neo) GrpcServer() *grpc.Server {
