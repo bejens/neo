@@ -5,32 +5,36 @@ import (
 	"github.com/bejens/neo/logx/zapx"
 )
 
-var loggerCore = zapx.Default()
+var core = zapx.Default()
 
-func WarpLogger(logger logger.Logger) {
-	loggerCore = logger
+func Warp(logger logger.Logger) {
+	core = logger
 }
 
-func Debug(msg string, args ...any) {
-	loggerCore.Log(logger.DebugLevel, msg, args...)
+func Debug(msg string, args ...logger.Field) {
+	core.Log(logger.DebugLevel, msg, args...)
 }
 
-func Warn(msg string, args ...any) {
-	loggerCore.Log(logger.WarnLevel, msg, args...)
+func Warn(msg string, args ...logger.Field) {
+	core.Log(logger.WarnLevel, msg, args...)
 }
 
-func Error(msg string, args ...any) {
-	loggerCore.Log(logger.ErrorLevel, msg, args...)
+func Error(msg string, args ...logger.Field) {
+	core.Log(logger.ErrorLevel, msg, args...)
 }
 
-func Info(msg string, args ...any) {
-	loggerCore.Log(logger.InfoLevel, msg, args...)
+func Info(msg string, args ...logger.Field) {
+	core.Log(logger.InfoLevel, msg, args...)
 }
 
-func Fatalln(msg string, args ...any) {
-	loggerCore.Log(logger.FatalLevel, msg, args...)
+func Fatal(msg string, args ...logger.Field) {
+	core.Log(logger.FatalLevel, msg, args...)
 }
 
-func Panic(msg string, args ...any) {
-	loggerCore.Log(logger.PanicLevel, msg, args...)
+func Panic(msg string, args ...logger.Field) {
+	core.Log(logger.PanicLevel, msg, args...)
+}
+
+func Sync() error {
+	return core.Sync()
 }

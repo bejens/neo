@@ -1,16 +1,15 @@
 package neo
 
 import (
-	"fmt"
-	"github.com/bejens/neo/cfg"
 	"net"
 	"os"
 	"os/signal"
 	"sync"
 
+	"github.com/bejens/neo/cfg"
+
 	"github.com/bejens/neo/logx"
 
-	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )
 
@@ -38,7 +37,7 @@ func (neo *Neo) Run() error {
 
 	neo.serviceInfos.Range(func(key, value any) bool {
 		sd := key.(*grpc.ServiceDesc)
-		logx.Info(fmt.Sprintf("registered service: %s", sd.ServiceName))
+		logx.Info("Register Service Success11", logx.String("service_name", sd.ServiceName))
 		neo.server.RegisterService(sd, value)
 		return true
 	})
@@ -49,7 +48,7 @@ func (neo *Neo) Run() error {
 	}
 
 	logx.Info("Server Starting...",
-		zap.String("address", neo.opt.address))
+		logx.String("address", neo.opt.address))
 	return neo.server.Serve(lis)
 }
 
@@ -63,12 +62,16 @@ func (neo *Neo) GrpcServer() *grpc.Server {
 
 func (neo *Neo) Stop() {
 	logx.Info("Server Graceful Stop")
+	if err := logx.Sync(); err != nil {
+		logx.Warn("Close Logger Fail", logx.Err(err))
+	}
 	neo.server.GracefulStop()
 }
 
 func New(options ...Option) (*Neo, error) {
 
 	if err := cfg.InitCfg(); err != nil {
+		logx.Error("Init Config Error", logx.Err(err))
 		return nil, err
 	}
 

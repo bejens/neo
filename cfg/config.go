@@ -1,7 +1,10 @@
 package cfg
 
 import (
+	"encoding/json"
 	"fmt"
+	"strconv"
+
 	"github.com/bejens/neo/cfg/envx"
 	"github.com/bejens/neo/cfg/filex"
 	"github.com/bejens/neo/cfg/parser"
@@ -61,8 +64,102 @@ func Get[T any](key string) (t T, ok bool) {
 		return t, false
 	}
 
-	t, ok = value.(T)
-	return
+	v, ok := value.(T)
+	if ok {
+		return v, ok
+	}
+	vs := fmt.Sprintf("%s", value)
+	switch interface{}(t).(type) {
+	case int:
+		v1, err := strconv.ParseInt(vs, 10, 64)
+		if err != nil {
+			return t, false
+		}
+		return interface{}(int(v1)).(T), true
+	case int8:
+		v1, err := strconv.ParseInt(vs, 10, 64)
+		if err != nil {
+			return t, false
+		}
+		return interface{}(int8(v1)).(T), true
+	case int16:
+		v1, err := strconv.ParseInt(vs, 10, 64)
+		if err != nil {
+			return t, false
+		}
+		return interface{}(int16(v1)).(T), true
+	case int32:
+		v1, err := strconv.ParseInt(vs, 10, 64)
+		if err != nil {
+			return t, false
+		}
+		return interface{}(int32(v1)).(T), true
+	case int64:
+		v1, err := strconv.ParseInt(vs, 10, 64)
+		if err != nil {
+			return t, false
+		}
+		return interface{}(v1).(T), true
+	case uint:
+		v1, err := strconv.ParseUint(vs, 10, 64)
+		if err != nil {
+			return t, false
+		}
+		return interface{}(uint(v1)).(T), true
+	case uint8:
+		v1, err := strconv.ParseUint(vs, 10, 64)
+		if err != nil {
+			return t, false
+		}
+		return interface{}(uint8(v1)).(T), true
+	case uint16:
+		v1, err := strconv.ParseUint(vs, 10, 64)
+		if err != nil {
+			return t, false
+		}
+		return interface{}(uint16(v1)).(T), true
+	case uint32:
+		v1, err := strconv.ParseUint(vs, 10, 64)
+		if err != nil {
+			return t, false
+		}
+		return interface{}(uint32(v1)).(T), true
+	case uint64:
+		v1, err := strconv.ParseUint(vs, 10, 64)
+		if err != nil {
+			return t, false
+		}
+		return interface{}(v1).(T), true
+	case float64:
+		v1, err := strconv.ParseFloat(vs, 64)
+		if err != nil {
+			return t, false
+		}
+		return interface{}(v1).(T), true
+	case float32:
+		v1, err := strconv.ParseFloat(vs, 64)
+		if err != nil {
+			return t, false
+		}
+		return interface{}(float32(v1)).(T), true
+	case bool:
+		v1, err := strconv.ParseBool(vs)
+		if err != nil {
+			return t, false
+		}
+		return interface{}(v1).(T), true
+	case string:
+		return interface{}(vs).(T), true
+	default:
+		bs, err := json.Marshal(value)
+		if err != nil {
+			return t, false
+		}
+		if err := json.Unmarshal(bs, &t); err == nil {
+			return t, true
+		}
+		return t, false
+	}
 }
 
 func Store(key string, value any) {

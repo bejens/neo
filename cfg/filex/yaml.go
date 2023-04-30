@@ -15,6 +15,10 @@ type YamlParser struct {
 	Path string
 }
 
+func (yp *YamlParser) Ext() string {
+	return "yaml"
+}
+
 func (yp *YamlParser) Parse() (map[string]any, error) {
 
 	m := make(map[string]any)
